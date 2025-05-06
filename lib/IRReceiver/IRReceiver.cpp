@@ -14,7 +14,7 @@ bool IRReceiver::handleSignal() {
     if (IrReceiver.decode()) {
         command = IrReceiver.decodedIRData.decodedRawData;
         IrReceiver.resume();
-        delay(500);
+        delay(50);
         return true;
 
     } else {
