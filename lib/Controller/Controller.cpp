@@ -10,34 +10,34 @@ Controller::Controller(IRReceiver& irReceiver, RGBLed& RGBLed)
 std::map<int, void(Controller::*)(std::vector<std::string>)> Controller::setup_commands() {
     std::map<int, void(Controller::*)(std::vector<std::string>)> commandMap;
     
-    commandMap[3208] = &Controller::togglePower;
-    commandMap[2740] = &Controller::brightnessUp;
-    commandMap[2724] = &Controller::brightnessDown;
-    commandMap[4094] = &Controller::setFlash;
-    commandMap[4177] = &Controller::setFade_1;
-    commandMap[4161] = &Controller::setFade_2;
-    commandMap[4077] = &Controller::setCrossFade_1; // Honolulu Colors
-    commandMap[4061] = &Controller::setCrossFade_2; // Cool Colors
-    commandMap[4044] = &Controller::setCrossFade_1; // Rainbow Colors
-    commandMap[2807] = &Controller::setColor; // Red
-    commandMap[2874] = &Controller::setColor; // Red-Orange
-    commandMap[2941] = &Controller::setColor; // Orangish
-    commandMap[3810] = &Controller::setColor; // Orange
-    commandMap[3877] = &Controller::setColor; // Yellow
-    commandMap[2790] = &Controller::setColor; // Green
-    commandMap[2857] = &Controller::setColor; // Light Green
-    commandMap[2924] = &Controller::setColor; // Cyan
-    commandMap[3793] = &Controller::setColor; // Cyan-Blue
-    commandMap[3125] = &Controller::setColor; // Blue
-    commandMap[3058] = &Controller::setColor; // Light Blue
-    commandMap[3860] = &Controller::setColor; // Navy Blue
-    commandMap[2991] = &Controller::setColor; // Blue-Purple
-    commandMap[3776] = &Controller::setColor; // Purple
-    commandMap[3843] = &Controller::setColor; // Dark Purple
-    commandMap[3008] = &Controller::setColor; // Pink
-    commandMap[3075] = &Controller::setColor; // Light Pink
-    commandMap[3760] = &Controller::setColor; // Gray
-    commandMap[3141] = &Controller::setColor; // White
+    commandMap[0xBF40] = &Controller::togglePower;
+    commandMap[0xA35C] = &Controller::brightnessUp;
+    commandMap[0xA25D] = &Controller::brightnessDown;
+    commandMap[0xF40B] = &Controller::setFlash;
+    commandMap[0xF906] = &Controller::setFade_1;
+    commandMap[0xF807] = &Controller::setFade_2;
+    commandMap[0xF30C] = &Controller::setCrossFade_1; // Honolulu Colors
+    commandMap[0xF20D] = &Controller::setCrossFade_2; // Cool Colors
+    commandMap[0xF10E] = &Controller::setCrossFade_1; // Rainbow Colors
+    commandMap[0xA758] = &Controller::setColor; // Red
+    commandMap[0xAB54] = &Controller::setColor; // Red-Orange
+    commandMap[0xAF50] = &Controller::setColor; // Orangish
+    commandMap[0xE31C] = &Controller::setColor; // Orange
+    commandMap[0xE718] = &Controller::setColor; // Yellow
+    commandMap[0xA659] = &Controller::setColor; // Green
+    commandMap[0xAA55] = &Controller::setColor; // Light Green
+    commandMap[0xAE51] = &Controller::setColor; // Cyan
+    commandMap[0xE21D] = &Controller::setColor; // Cyan-Blue
+    commandMap[0xE619] = &Controller::setColor; // Blue
+    commandMap[0xBA45] = &Controller::setColor; // Navy Blue
+    commandMap[0xB649] = &Controller::setColor; // Light Blue
+    commandMap[0xB24D] = &Controller::setColor; // Blue-Purple
+    commandMap[0xE11E] = &Controller::setColor; // Purple
+    commandMap[0xE51A] = &Controller::setColor; // Dark Purple
+    commandMap[0xB34C] = &Controller::setColor; // Pink
+    commandMap[0xB748] = &Controller::setColor; // Light Pink
+    commandMap[0xE01F] = &Controller::setColor; // Gray
+    commandMap[0xBB44] = &Controller::setColor; // White
 
     return commandMap;
 }
@@ -58,6 +58,9 @@ void Controller::processSignal() {
         } else {
             Serial.print("Invalid command.\n");
         }
+
+        Serial.print("Command: 0x");
+        Serial.println(command, HEX);
     }
 
     return;
@@ -65,7 +68,7 @@ void Controller::processSignal() {
 
 // functions according to their signal
 
-void Controller::togglePower(std::vector<std::string> args) {
+void Controller::togglePower(std::vector<std::string>) {
     if (!(running)) {
         led.setColor(RGB);
         running = true;
@@ -77,7 +80,7 @@ void Controller::togglePower(std::vector<std::string> args) {
     return;
 }
 
-void Controller::brightnessUp(std::vector<std::string> args) {
+void Controller::brightnessUp(std::vector<std::string>) {
     if (running) {
         if (brightness < 100) {
             brightness += 10;
@@ -89,7 +92,7 @@ void Controller::brightnessUp(std::vector<std::string> args) {
     return;
 }
 
-void Controller::brightnessDown(std::vector<std::string> args) {
+void Controller::brightnessDown(std::vector<std::string>) {
     if (running) {
         if (brightness > 10) {
             brightness -= 10;
@@ -101,7 +104,7 @@ void Controller::brightnessDown(std::vector<std::string> args) {
     return;
 }
 
-void Controller::setFlash(std::vector<std::string> args) {
+void Controller::setFlash(std::vector<std::string>) {
     if (running) {
         flashing = !flashing;
     }
@@ -134,7 +137,7 @@ void Controller::setFlash(std::vector<std::string> args) {
     return;
 }
 
-void Controller::setFade_1(std::vector<std::string> args) {
+void Controller::setFade_1(std::vector<std::string>) {
     if (running) {
         fade1 = !fade1;
     }
@@ -168,7 +171,7 @@ void Controller::setFade_1(std::vector<std::string> args) {
     return;
 }
 
-void Controller::setFade_2(std::vector<std::string> args) {
+void Controller::setFade_2(std::vector<std::string>) {
     if (running) {
         fade2 = !fade2;
     }
@@ -201,7 +204,7 @@ void Controller::setFade_2(std::vector<std::string> args) {
     return;
 }
 
-void Controller::setCrossFade_1(std::vector<std::string> args) {
+void Controller::setCrossFade_1(std::vector<std::string>) {
     if (running) {
         crossFade1 = !crossFade1;
     }
@@ -245,7 +248,7 @@ void Controller::setCrossFade_1(std::vector<std::string> args) {
     return;
 }
 
-void Controller::setCrossFade_2(std::vector<std::string> args) {
+void Controller::setCrossFade_2(std::vector<std::string>) {
     if (running) {
         crossFade2 = !crossFade2;
     }
@@ -289,7 +292,7 @@ void Controller::setCrossFade_2(std::vector<std::string> args) {
     return;
 }
 
-void Controller::setCrossFade_3(std::vector<std::string> args) {
+void Controller::setCrossFade_3(std::vector<std::string>) {
     if (running) {
         crossFade3 = !crossFade3;
     }
@@ -337,7 +340,7 @@ void Controller::setCrossFade_3(std::vector<std::string> args) {
     return;
 }
 
-void Controller::setColor(std::vector<std::string> args) {
+void Controller::setColor(std::vector<std::string>) {
     if (running) {
         auto colorEntry = colorMap.find(lastCommand);
 

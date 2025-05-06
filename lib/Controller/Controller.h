@@ -22,38 +22,38 @@ class Controller {
         int lastCommand;
         std::map<int, void(Controller::*)(std::vector<std::string>)> cmds; // function pointer for processing IR codes
         std::map<int, std::array<int, 3>> colorMap = {
-            {2807, {255, 0, 0}},     // Red
-            {2790, {0, 255, 0}},     // Green
-            {3125, {0, 0, 255}},     // Blue
-            {3141, {255, 255, 255}}, // White
-            {2874, {255, 69, 0}}, // Red-Orange
-            {2941, {255, 140, 0}}, // Orangish
-            {3810, {255, 165, 0}},   // Orange
-            {3877, {255, 255, 0}},   // Yellow
-            {2857, {144, 238, 144}}, // Light Green
-            {2924, {0, 255, 255}}, // Cyan
-            {3793, {0, 180, 255}}, // Cyan-Blue (idfk the color names)
-            {3860, {0, 0, 128}}, // Navy Blue
-            {3058, {173, 216, 230}}, // Light Blue
-            {2991, {138, 43, 226}}, // Blue-Purple
-            {3776, {128, 0, 128}}, // Purple
-            {3843, {75, 0, 130}}, // Dark Purple
-            {3075, {255, 182, 193}}, // Light Pink
-            {3008, {255, 105, 180}}, // Pink
-            {3760, {128, 128, 128}}, // Gray
+            {0xA758, {255, 0, 0}},         // Red
+            {0xAB54, {255, 69, 0}},        // Red-Orange
+            {0xAF50, {255, 140, 0}},       // Orangish
+            {0xE31C, {255, 165, 0}},       // Orange
+            {0xE718, {255, 255, 0}},       // Yellow
+            {0xA659, {0, 255, 0}},         // Green
+            {0xAA55, {144, 238, 144}},     // Light Green
+            {0xAE51, {0, 255, 255}},       // Cyan
+            {0xE21D, {0, 180, 255}},       // Cyan-Blue
+            {0xE619, {0, 0, 255}},         // Blue
+            {0xBA45, {0, 0, 128}},         // Navy Blue
+            {0xB649, {173, 216, 230}},     // Light Blue
+            {0xB24D, {138, 43, 226}},      // Blue-Purple
+            {0xE11E, {128, 0, 128}},       // Purple
+            {0xE51A, {75, 0, 130}},        // Dark Purple
+            {0xB34C, {255, 105, 180}},     // Pink
+            {0xB748, {255, 182, 193}},     // Light Pink
+            {0xE01F, {128, 128, 128}},     // Gray
+            {0xBB44, {255, 255, 255}},     // White
         };
 
         std::map<int, void(Controller::*)(std::vector<std::string>)> setup_commands();
-        void togglePower(std::vector<std::string> args);
-        void brightnessUp(std::vector<std::string> args);
-        void brightnessDown(std::vector<std::string> args);
-        void setColor(std::vector<std::string> args);
-        void setFlash(std::vector<std::string> args);
-        void setFade_1(std::vector<std::string> args);
-        void setFade_2(std::vector<std::string> args);
-        void setCrossFade_1(std::vector<std::string> args);
-        void setCrossFade_2(std::vector<std::string> args);
-        void setCrossFade_3(std::vector<std::string> args);
+        void togglePower(std::vector<std::string>);
+        void brightnessUp(std::vector<std::string>);
+        void brightnessDown(std::vector<std::string>);
+        void setColor(std::vector<std::string>);
+        void setFlash(std::vector<std::string>);
+        void setFade_1(std::vector<std::string>);
+        void setFade_2(std::vector<std::string>);
+        void setCrossFade_1(std::vector<std::string>);
+        void setCrossFade_2(std::vector<std::string>);
+        void setCrossFade_3(std::vector<std::string>);
 
     public:
         Controller(IRReceiver& irReceiver, RGBLed& RGBLed);

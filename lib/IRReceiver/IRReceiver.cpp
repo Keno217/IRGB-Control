@@ -22,15 +22,7 @@ bool IRReceiver::handleSignal() {
     }
 }
 
-// shorten 64bit number
+// shorten 32-bit number
 int IRReceiver::getCommand() {
-    String firstFour = String(command);
-    int firstFourInt = 0;
-    
-    if (firstFour.length() >= 4) {
-        firstFour = firstFour.substring(0, 4);
-        firstFourInt = firstFour.toInt();
-    }
-
-    return firstFourInt;
+    return (int)((command >> 16) & 0xFFFF);
 }
