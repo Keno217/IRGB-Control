@@ -1,24 +1,24 @@
 # IRGB-Control
 A project created by Kenan Velagic that uses a microcontroller, IR sensor, and remote to operate an RGB LED.  
 ## Usage  
-\* Download the project  
-\* Create the controller object. This object takes two parameters that are also objects. One object corresponds to three analog pins connected
+- Download the project  
+- Create the controller object. This object takes two parameters that are also objects. One object corresponds to three analog pins connected
 to the Arduino (RGB LED), and the other is connected by one analog pin to the Arduino (IR Receiver).
 ```cpp
 IRReceiver irReceiver(2);
 RGBLed led(3, 4, 5, RGBLed::COMMON_CATHODE);
 Controller mc(irReceiver, led);
 ```
-\* Start the IR Receiver & Set LED off  
+- Start the IR Receiver & Set LED off  
 ```cpp
 irReceiver.begin();
 led.off();
 ```
-\* Start invoking functions based on the signal received  
+- Start invoking functions based on the signal received  
 ```cpp
 mc.processSignal();
 ```
-\* When you first upload the code to your Arduino, use the Serial Monitor to identify which IR code corresponds to each button on your remote.
+- When you first upload the code to your Arduino, use the Serial Monitor to identify which IR code corresponds to each button on your remote.
 Then, update the hashmap so each IR code maps to the correct function based on your remote’s signals.
 ```cpp
 std::map<int, void(Controller::*)(std::vector<std::string>)> Controller::setup_commands() {
@@ -56,7 +56,7 @@ std::map<int, void(Controller::*)(std::vector<std::string>)> Controller::setup_c
     return commandMap;
 }
 ```
-\* You will have to do the same for the variable ColorMap.
+- You will have to do the same for the variable ColorMap.
 ```cpp
 std::map<int, std::array<int, 3>> colorMap = {
             {0xA758, {255, 0, 0}},         // Red
