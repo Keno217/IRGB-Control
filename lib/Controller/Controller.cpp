@@ -131,9 +131,20 @@ void Controller::setFlash(std::vector<std::string>) {
 
             if (cmds.find(command) != cmds.end()) {
                 (this->*cmds[command])({});
-                flashing = false;
-                led.setColor(RGB);
-                break;
+
+                auto it = cmds.find(command);
+
+                if (it->first != 0xA35CFF00 && it->first != 0xA25DFF00) { // exclude brightness-up/down from exiting funct
+                    flashing = false;
+
+                    // setColor if flash is invoked during flash b/c default is (0, 0, 0)
+                    if (running) {
+                        led.setColor(RGB);
+                    }
+
+                    break;
+
+                }
 
             } else {
                 Serial.println("Invalid command.");
@@ -166,6 +177,13 @@ void Controller::setFade_1(std::vector<std::string>) {
                 (this->*cmds[command])({});
                 fade1 = false;
                 break;
+
+                /*auto it = cmds.find(command);
+
+                if (it->first != 0xA35CFF00 && it->first != 0xA25DFF00) { // takes too long to get invoked
+                    fade1 = false;
+                    break;
+                }*/
             
             } else {
                 Serial.println("Invalid command.");
