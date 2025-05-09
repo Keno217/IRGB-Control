@@ -22,7 +22,6 @@ bool IRReceiver::handleSignal() {
     }
 }
 
-// shorten 32-bit number
 int IRReceiver::getCommand() {
-    return (int)((command >> 16) & 0xFFFF);
+    return command;
 }
