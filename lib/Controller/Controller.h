@@ -8,15 +8,20 @@
 
 class Controller {
     private:
+        enum class State {
+            NORMAL,
+            FLASHING,
+            FADE_1,
+            FADE_2,
+            CROSSFADE_1,
+            CROSSFADE_2,
+            CROSSFADE_3,
+        };
+
         IRReceiver& ir;
         RGBLed& led;
+        State currentState;
         bool running;
-        bool flashing;
-        bool fade1;
-        bool fade2;
-        bool crossFade1;
-        bool crossFade2;
-        bool crossFade3;
         int brightness;
         int RGB[3];
         int lastCommand;

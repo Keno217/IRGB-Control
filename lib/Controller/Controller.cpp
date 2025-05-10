@@ -2,9 +2,7 @@
 
 Controller::Controller(IRReceiver& irReceiver, RGBLed& RGBLed)
     : ir(irReceiver), led(RGBLed), running(false),
-    flashing(false), fade1(false), fade2(false),
-    crossFade1(false), crossFade2(false), crossFade3(false),
-    brightness(100), RGB{255, 255, 255}, lastCommand(0),
+    currentState(State::NORMAL), brightness(100), RGB{255, 255, 255}, lastCommand(0),
     cmds(setup_commands()) {}
 
 std::map<int, void(Controller::*)(std::vector<std::string>)> Controller::setup_commands() {
@@ -74,6 +72,7 @@ void Controller::togglePower(std::vector<std::string>) {
         running = true;
     } else {
         led.off();
+        currentState = State::NORMAL;
         running = false;
     }
 
@@ -115,10 +114,16 @@ void Controller::brightnessDown(std::vector<std::string>) {
 
 void Controller::setFlash(std::vector<std::string>) {
     if (running) {
-        flashing = !flashing;
+        if (currentState != State::FLASHING) {
+            currentState = State::FLASHING;
+
+        } else {
+            currentState = State::NORMAL;
+            led.setColor(RGB); // setColor b/c default is (0, 0, 0) after using flash() function
+        }
     }
 
-    while (flashing) {
+    while (currentState == State::FLASHING) {
         if (ir.handleSignal()) {
             int command = ir.getCommand();
 
@@ -131,20 +136,7 @@ void Controller::setFlash(std::vector<std::string>) {
 
             if (cmds.find(command) != cmds.end()) {
                 (this->*cmds[command])({});
-
-                auto it = cmds.find(command);
-
-                if (it->first != 0xA35CFF00 && it->first != 0xA25DFF00) { // exclude brightness-up/down from exiting funct
-                    flashing = false;
-
-                    // setColor if flash is invoked during flash b/c default is (0, 0, 0)
-                    if (running) {
-                        led.setColor(RGB);
-                    }
-
-                    break;
-
-                }
+                continue;
 
             } else {
                 Serial.println("Invalid command.");
@@ -159,10 +151,10 @@ void Controller::setFlash(std::vector<std::string>) {
 
 void Controller::setFade_1(std::vector<std::string>) {
     if (running) {
-        fade1 = !fade1;
+        currentState = (currentState != State::FADE_1) ? State::FADE_1 : State::NORMAL;
     }
 
-    while (fade1) {
+    while (currentState == State::FADE_1) {
         if (ir.handleSignal()) {
             int command = ir.getCommand();
 
@@ -175,15 +167,7 @@ void Controller::setFade_1(std::vector<std::string>) {
 
             if (cmds.find(command) != cmds.end()) {
                 (this->*cmds[command])({});
-                fade1 = false;
-                break;
-
-                /*auto it = cmds.find(command);
-
-                if (it->first != 0xA35CFF00 && it->first != 0xA25DFF00) { // takes too long to get invoked
-                    fade1 = false;
-                    break;
-                }*/
+                continue;
             
             } else {
                 Serial.println("Invalid command.");
@@ -200,10 +184,10 @@ void Controller::setFade_1(std::vector<std::string>) {
 
 void Controller::setFade_2(std::vector<std::string>) {
     if (running) {
-        fade2 = !fade2;
+        currentState = (currentState != State::FADE_2) ? State::FADE_2 : State::NORMAL;
     }
 
-    while (fade2) {
+    while (currentState == State::FADE_2) {
         if (ir.handleSignal()) {
             int command = ir.getCommand();
 
@@ -216,8 +200,7 @@ void Controller::setFade_2(std::vector<std::string>) {
 
             if (cmds.find(command) != cmds.end()) {
                 (this->*cmds[command])({});
-                fade2 = false;
-                break;
+                continue;
             
             } else {
                 Serial.println("Invalid command.");
@@ -233,10 +216,10 @@ void Controller::setFade_2(std::vector<std::string>) {
 
 void Controller::setCrossFade_1(std::vector<std::string>) {
     if (running) {
-        crossFade1 = !crossFade1;
+        currentState = (currentState != State::CROSSFADE_1) ? State::CROSSFADE_1 : State::NORMAL;
     }
 
-    while (crossFade1) {
+    while (currentState == State::CROSSFADE_1) {
         if (ir.handleSignal()) {
             int command = ir.getCommand();
 
@@ -249,8 +232,16 @@ void Controller::setCrossFade_1(std::vector<std::string>) {
 
             if (cmds.find(command) != cmds.end()) {
                 (this->*cmds[command])({});
-                crossFade1 = false;
+                currentState = State::NORMAL;
                 break;
+
+                /*auto it = cmds.find(command);
+
+                // exclude brightness up/down command from exiting state
+                if (it->first != 0xA35CFF00 && it->first != 0xA25DFF00) {
+                    currentState = State::NORMAL;
+                    break;
+                }*/
             
             } else {
                 Serial.println("Invalid command.");
@@ -277,10 +268,10 @@ void Controller::setCrossFade_1(std::vector<std::string>) {
 
 void Controller::setCrossFade_2(std::vector<std::string>) {
     if (running) {
-        crossFade2 = !crossFade2;
+        currentState = (currentState != State::CROSSFADE_2) ? State::CROSSFADE_2 : State::NORMAL;
     }
 
-    while (crossFade2) {
+    while (currentState == State::CROSSFADE_2) {
         if (ir.handleSignal()) {
             int command = ir.getCommand();
 
@@ -293,8 +284,16 @@ void Controller::setCrossFade_2(std::vector<std::string>) {
 
             if (cmds.find(command) != cmds.end()) {
                 (this->*cmds[command])({});
-                crossFade2 = false;
+                currentState = State::NORMAL;
                 break;
+
+                /*auto it = cmds.find(command);
+
+                // exclude brightness up/down command from exiting state
+                if (it->first != 0xA35CFF00 && it->first != 0xA25DFF00) {
+                    currentState = State::NORMAL;
+                    break;
+                }*/
             
             } else {
                 Serial.println("Invalid command.");
@@ -321,10 +320,10 @@ void Controller::setCrossFade_2(std::vector<std::string>) {
 
 void Controller::setCrossFade_3(std::vector<std::string>) {
     if (running) {
-        crossFade3 = !crossFade3;
+        currentState = (currentState != State::CROSSFADE_3) ? State::CROSSFADE_3 : State::NORMAL;
     }
 
-    while (crossFade3) {
+    while (currentState == State::CROSSFADE_3) {
         if (ir.handleSignal()) {
             int command = ir.getCommand();
 
@@ -337,8 +336,16 @@ void Controller::setCrossFade_3(std::vector<std::string>) {
 
             if (cmds.find(command) != cmds.end()) {
                 (this->*cmds[command])({});
-                crossFade3 = false;
+                currentState = State::NORMAL;
                 break;
+
+                /*auto it = cmds.find(command);
+
+                // exclude brightness up/down command from exiting state
+                if (it->first != 0xA35CFF00 && it->first != 0xA25DFF00) {
+                    currentState = State::NORMAL;
+                    break;
+                }*/
             
             } else {
                 Serial.println("Invalid command.");
