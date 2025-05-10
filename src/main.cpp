@@ -3,7 +3,7 @@
 Kenan Velagic
 RGB Led w/Remote Project
 4/29/2025
-Last Updated: 5/9/2025
+Last Updated: 5/10/2025
 
 Acknowledgments:
 This project uses the RGBLed library (https://github.com/wilmouths/RGBLed) by wilmouths, licensed under the GNU GPLv3.

@@ -97,13 +97,12 @@ void Controller::brightnessUp(std::vector<std::string>) {
 
 void Controller::brightnessDown(std::vector<std::string>) {
     if (running) {
-        if (brightness > 10) {
-            brightness -= 10;
-
-        }
-
         if (brightness == 10) {
             brightness = 1;
+        }
+        
+        if (brightness > 10) {
+            brightness -= 10;
         }
 
         led.brightness(RGB, brightness);
