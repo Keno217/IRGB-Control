@@ -81,7 +81,7 @@ std::map<int, std::array<int, 3>> colorMap = {
         };
 ```
 ## Project Demo
-https://youtu.be/KxImIAVPzr0
+https://youtu.be/ZDgjb_1h5nw
 
 ## Acknowledgments
 This project uses the RGBLed library by wilmouths, licensed under the GNU GPLv3.  
